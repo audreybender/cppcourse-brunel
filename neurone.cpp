@@ -1,15 +1,22 @@
 #include "neurone.hpp" 
+#include "constant.hpp"
 #include <cmath>
 
-constexpr double h(0.1);
+
 using namespace std; 
 
 
 //Constructeur
 Neurone::Neurone( double membranePotential, double timeSpikes,
-				double currentExt, int numberSpikes, bool refractory )
+				double currentExt, int numberSpikes, bool refractory,
+				double clock )
 		{
+			membranePotential= 0.0;
+			timeSpikes = 0.0;
+			currentExt = 00;
+			numberSpikes = 0.0;
 			refractory = false;
+			clock = 0.0;
 			}
 //Destructeur 
 Neurone::~Neurone(){}
@@ -30,6 +37,9 @@ double Neurone::getCurrentExt() const {
 bool Neurone::getRefractory() const {
 	return refractory;
 }
+double Neurone::getClock() const {
+	return clock;
+}
 //Setter
 void Neurone::setPotential( double p) {
 	membranePotential = p; 
@@ -40,28 +50,55 @@ void Neurone::setCurrentExt( double c) {
 void Neurone::setRefractory( bool r) {
 	refractory = r; 
 }
+void Neurone::setNumberSpikes( int n) {
+	numberSpikes = n;
+}
 //Méthodes
-double Neurone::calculPotential() {
+void Neurone::calculPotential() {
 	double Potential = getPotential(); 
-	double constant( exp( -h / tao ) );
+	double constant( exp( (-h / tao ) ));
 	double newPotential;
 	newPotential = Potential * constant 
-			+ getCurrentExt() * R / tao * (1- constant); 
-	if ( newPotential > Potential ) {
-		numberSpikes +=1; 
-	}
+			+ getCurrentExt() * R * (1- constant); 
 	setPotential( newPotential ); 
-	return newPotential;
 }
 
-void Neurone::update() {
-
-		if ( getRefractory() ){
-			setPotential(0.0);
-		}else{
+bool Neurone::update(double time) {
+		bool spike(false);
+		double timeR(0.0);
 		
-		//if ( getPotential() > Vth ) {
-		calculPotential();
-		//}
-	}
+		if ( buffer.CQ[buffer.getFront()] != 0.0 ) {
+			setPotential( buffer.getFront() );
+		}
+		
+		if (membranePotential > Vth) {
+			setRefractory( true );	
+		}
+		if ( getRefractory() == true ){
+			setPotential(0.0);
+			timeR += time;
+				if ( timeR > refTime ) {
+					setRefractory( false );
+					timeR = 0.0;
+					numberSpikes +=1;
+			}
+		 
+		}else{
+			calculPotential();	
+		}
+		
+		clock +=time;
+		buffer.dequeue(); 
+	
+		if ( numberSpikes > 0 ) {
+			spike = true;
+		}
+	
+	return spike;
+}
+
+void Neurone::receive(double clockDelay, double j){
+
+	buffer.enqueue( getPotential() + j); 
+
 }

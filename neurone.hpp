@@ -2,22 +2,19 @@
 #define NEURONE_HPP
 
 #include <iostream>
-
+#include <array>
+#include "CQ.cpp"
 
 using namespace std; 
-
-constexpr double Vth(20);
-constexpr double C ( 1);
-constexpr double tao(20);
-constexpr double R( tao / C);
+	
 
 class Neurone {
 	public : 
-	
+
 	//Constructeur
 	Neurone( double membranePotential=0.0, double timeSpikes=0.0,
 			double currentExt=0.0, int numberSpikes=0,
-			 bool refractory=false );
+			 bool refractory=false, double clock= 0.0 );
 	//Destructeur
 	~Neurone();
 	//Getter
@@ -26,13 +23,16 @@ class Neurone {
 	double getTimeSpikes() const;
 	double getCurrentExt() const; 
 	bool getRefractory() const;
+	double getClock() const; 
 	//Setter
 	void setPotential( double p);
 	void setCurrentExt( double c);
 	void setRefractory( bool r);
+	void setNumberSpikes( int n);
 	//Méthodes 
-	void update(); 
-	double calculPotential(); 
+	bool update(double time); 
+	void calculPotential(); 
+	void receive(double clockDelay, double j);
 	
 	
 	private : 
@@ -41,6 +41,8 @@ class Neurone {
 	double currentExt; 
 	int numberSpikes;
 	bool refractory;
+	double clock;
+	cqueue buffer; 
 	
 };
 
