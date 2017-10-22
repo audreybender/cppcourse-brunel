@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include "constant.hpp"
-#include "neurone.cpp"
+#include "neurone.hpp" 
 
 
 using namespace std; 
@@ -13,12 +13,10 @@ int main() {
 	
 	Neurone N1;
 	Neurone N2;
-	double timeStop; 
+	double tStop; 
 	double straightCurrent; 
 	double a;
 	double b;
-	vector<Neurone> Neurones;
-	Neurones = { N1, N2 };
 	
 	ofstream fichier(nomFichier);
 	if(fichier.fail()) {
@@ -33,45 +31,39 @@ int main() {
 	cout << " until ? " << endl; 
 	cin >> b;
 	cout << " End time ? " << endl;
-	cin >> timeStop;
+	cin >> tStop;
 	
-	fichier << "Temps :  " << left << "Potentiel :" << endl;
-	
-	double tStart(0.0);
-	double simTime( tStart);
+	fichier << "Temps :  " << '\t' << "Potentiel :" << endl;
 	
 		
-	while( simTime < timeStop ) { //General clock
+	for( int t= 0; t < tStop ; ++t ) { //General clock
 		
 		//Set current depending external current to the first neurone 
-		if ( (a < simTime) and (simTime < b) ) {
-		Neurones[0].setCurrentExt(straightCurrent); 
+		if ( (a < t) and (t < b) ) {
+			N1.setCurrentExt(straightCurrent); 
 		
 		}else {
-			Neurones[0].setCurrentExt( 0.0 );    
+			N1.setCurrentExt( 0.0 );   
 		}	
-	}
 	
-	//Connections
-	for ( auto neurone : Neurones ) {
-		while( neurone.getClock() < timeStop ) {
-			bool spike ( false);
-			spike = neurone.update(h);
-			
-			if (spike) {
-				Neurones[1].receive( (neurone.getClock()+delay), J);  // Pour l'instant seulement une connection 
-			}
+	bool spike1 = N1.update(1); 
+	bool spike2 = N2.update(1); 
+	
+
 		
 		//Write in a file result 
-		fichier.width(10);
-		fichier << simTime << left << N2.getPotential() << endl;
-		simTime += h; 	
-		
+		fichier << t*h << '\t' << N2.getPotential() << endl;
+		if(spike1) { 
+			fichier << "Spike1 at t=" << t*h << endl;
+			N2.receive(t+delay, h); 
 		}
-	
+		if(spike2) {
+			fichier << " Spike2 at t=" << t*h << endl; 
+		}
 	}
 		
 		//Write number of spikes
+		fichier << endl; 
 		fichier << "Number of spikes N2 : " << endl;
 		fichier << N2.getNumberSpikes() << endl;
 		fichier.close(); 

@@ -1,23 +1,30 @@
 #include "neurone.hpp" 
 #include "constant.hpp"
 #include <cmath>
+#include <assert.h>
 
 
 using namespace std; 
 
 
 //Constructeur
-Neurone::Neurone( double membranePotential, double timeSpikes,
-				double currentExt, int numberSpikes, bool refractory,
-				double clock )
+Neurone::Neurone( double membranePotential, unsigned long timeSpikes,
+				double currentExt,unsigned long numberSpikes, bool refractory,
+				unsigned long clock, double refStep )
+			
 		{
-			membranePotential= 0.0;
-			timeSpikes = 0.0;
-			currentExt = 00;
-			numberSpikes = 0.0;
+			membranePotential = 0.0;
+			timeSpikes = 0;
+			currentExt = 0.0;
+			numberSpikes = 0;
 			refractory = false;
-			clock = 0.0;
-			}
+			clock = 0;
+			refStep = ( refTime / h);
+			for ( auto& element : buffer) {
+				element = 0; 
+			} 
+		}
+		
 //Destructeur 
 Neurone::~Neurone(){}
 //Getters
@@ -54,51 +61,46 @@ void Neurone::setNumberSpikes( int n) {
 	numberSpikes = n;
 }
 //Méthodes
-void Neurone::calculPotential() {
-	double Potential = getPotential(); 
-	double constant( exp( (-h / tao ) ));
-	double newPotential;
-	newPotential = Potential * constant 
-			+ getCurrentExt() * R * (1- constant); 
-	setPotential( newPotential ); 
-}
 
-bool Neurone::update(double time) {
+bool Neurone::update(unsigned long time) {
+	
 		bool spike(false);
-		double timeR(0.0);
+		unsigned long tStop = clock + time; 
 		
-		if ( buffer.CQ[buffer.getFront()] != 0.0 ) {
-			setPotential( buffer.getFront() );
-		}
 		
-		if (membranePotential > Vth) {
-			setRefractory( true );	
-		}
-		if ( getRefractory() == true ){
-			setPotential(0.0);
-			timeR += time;
-				if ( timeR > refTime ) {
-					setRefractory( false );
-					timeR = 0.0;
-					numberSpikes +=1;
+		while( clock < tStop) 
+		{
+			unsigned long tStart = clock % (delayStep + 1); 
+			
+			if ( getPotential() > Vth) {
+			//	setRefractory( true );	
+			spike = true; 
+			numberSpikes += 1; 
+			timeSpikes = clock; 
 			}
+			
+		if ( (timeSpikes > 0) and (clock-timeSpikes < refStep) ){
+			setPotential(0.0);
 		 
 		}else{
-			calculPotential();	
+			assert( tStart < buffer.size() );
+			double potential = getPotential();
+			setPotential( c1*potential + c2*getCurrentExt() + buffer[tStart]  );	
 		}
 		
-		clock +=time;
-		buffer.dequeue(); 
-	
+		buffer[tStart] = 0; 
+		clock += 1; 
+		}
+		
 		if ( numberSpikes > 0 ) {
 			spike = true;
 		}
-	
 	return spike;
 }
 
-void Neurone::receive(double clockDelay, double j){
-
-	buffer.enqueue( getPotential() + j); 
+void Neurone::receive(unsigned long clockDelay, double j)
+{
+	int tOut = (clockDelay%(delayStep + 1)); 
+	buffer[tOut] += j; 
 
 }

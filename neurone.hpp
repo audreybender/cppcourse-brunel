@@ -2,8 +2,9 @@
 #define NEURONE_HPP
 
 #include <iostream>
+#include <cmath>
 #include <array>
-#include "CQ.cpp"
+#include "constant.hpp"
 
 using namespace std; 
 	
@@ -12,9 +13,10 @@ class Neurone {
 	public : 
 
 	//Constructeur
-	Neurone( double membranePotential=0.0, double timeSpikes=0.0,
-			double currentExt=0.0, int numberSpikes=0,
-			 bool refractory=false, double clock= 0.0 );
+	Neurone( double membranePotential=0.0, unsigned long timeSpikes=0,
+			double currentExt=0.0, unsigned long numberSpikes=0,
+			 bool refractory=false, unsigned long clock= 0, 
+			 double refStep =( refTime / h)) ;
 	//Destructeur
 	~Neurone();
 	//Getter
@@ -30,19 +32,24 @@ class Neurone {
 	void setRefractory( bool r);
 	void setNumberSpikes( int n);
 	//Méthodes 
-	bool update(double time); 
-	void calculPotential(); 
-	void receive(double clockDelay, double j);
+	
+	// Update the membrane Potential   
+	bool update(unsigned long time); 
+	//If the neurone1 spikes the neurone link to it will receive a new 
+	//Membrane Potential J at his time + Delay so potential is put 
+	//In its buffer at clock + delay 
+	void receive(unsigned long clockDelay, double j);
 	
 	
 	private : 
 	double membranePotential; 
-	double timeSpikes;
+	unsigned long timeSpikes;
 	double currentExt; 
 	int numberSpikes;
 	bool refractory;
-	double clock;
-	cqueue buffer; 
+	unsigned long clock;
+	double refStep; 
+	array<double, bufferSize> buffer; 
 	
 };
 
