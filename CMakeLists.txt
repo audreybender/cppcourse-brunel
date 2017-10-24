@@ -5,7 +5,7 @@ add_executable (Neurone neurone.cpp main.cpp)
 
 
 enable_testing()
-add_-subdirectory(gtest)
+add_subdirectory(gtest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 
