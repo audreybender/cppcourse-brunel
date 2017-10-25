@@ -49,7 +49,7 @@ int main() {
 	bool spike1 = N1.update(1); 
 	bool spike2 = N2.update(1); 
 	//Write the result in the terminal 
-	   cout << t << '\t' << N1.getPotential() << endl;
+	   cout << t << '\t' << N2.getPotential() << endl;
 		if(spike1) { 
 			cout << "Spike1 at t=" << t << endl;
 			N2.receive(t+delay, h); 

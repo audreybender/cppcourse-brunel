@@ -12,17 +12,14 @@ using namespace std;
 
 
 //Constructeur
-Neurone::Neurone( double membranePotential, unsigned long timeSpikes,
+Neurone::Neurone( long double membranePotential, unsigned long timeSpikes,
 				double currentExt,unsigned long numberSpikes,
 				unsigned long clock, double refStep )
+				: membranePotential(0.0), timeSpikes(0),
+				  currentExt(0.0), numberSpikes(0), clock(0)
 			
 		{
-			membranePotential = 0.0;
-			timeSpikes = 0;
-			currentExt = 0.0;
-			numberSpikes = 0;
-			clock = 0;
-			refStep = ( refTime / h);
+			refStep = ( static_cast<const unsigned long>(refTime / h) );
 			for ( auto& element : buffer) {
 				element = 0; 
 			} 
@@ -31,7 +28,7 @@ Neurone::Neurone( double membranePotential, unsigned long timeSpikes,
 //Destructeur 
 Neurone::~Neurone(){}
 //Getters
-double Neurone::getPotential() const {
+long double Neurone::getPotential() const {
 	return membranePotential; 
 }
 
@@ -49,7 +46,7 @@ double Neurone::getClock() const {
 	return clock;
 }
 //Setter
-void Neurone::setPotential( double p) {
+void Neurone::setPotential( long double p) {
 	membranePotential = p; 
 }
 void Neurone::setCurrentExt( double c) {
@@ -81,14 +78,14 @@ bool Neurone::update(unsigned long time) {
 			 timeSpikes = clock; 
 			}
 			
-		    if ( (timeSpikes > 0) and ( (clock-timeSpikes) < refStep) ){
+		    if ( (timeSpikes > 0) and ( (clock-timeSpikes) <= refStep/h) ){
 			   //Refractory time of the neuron after a spike 
 			   setPotential(0.0); 
 		    }else{
 				
 			assert( tArrival < buffer.size() );
-			double potential = getPotential();
-			setPotential(exp(-h/tao) * potential +  R*(1-exp(-h/tao)) * getCurrentExt() + buffer[tArrival]  );
+			long double potential = getPotential();
+			setPotential( exp(-h/tao) * potential +  R*(1-exp(-h/tao)) * getCurrentExt() + buffer[tArrival]  );
 		}
 		
 
@@ -99,7 +96,7 @@ bool Neurone::update(unsigned long time) {
 	return spike;
 }
 
-void Neurone::receive(unsigned long clockDelay, double j)
+void Neurone::receive(unsigned long clockDelay, long double j)
 {
 	const size_t tSpike = (clockDelay%(delayStep + 1)); 
 	buffer[tSpike] += j; 

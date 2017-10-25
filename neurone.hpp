@@ -32,7 +32,7 @@ class Neurone {
 	 * @param clock
 	 * @param refStep 
 	 */
-	Neurone( double membranePotential=0.0, unsigned long timeSpikes=0,
+	Neurone( long double membranePotential=0.0, unsigned long timeSpikes=0,
 			double currentExt=0.0, unsigned long numberSpikes=0,
 	        unsigned long clock= 0, double refStep =( refTime / h)) ;
 	/**
@@ -44,7 +44,7 @@ class Neurone {
 	 * @brief Get the membrane potential 
 	 * @return membrane potential 
 	 */ 
-	double getPotential() const; 
+	long double getPotential() const; 
 	/**
 	 * @brief Get number of spikes
 	 * @return number of spikes 
@@ -72,7 +72,7 @@ class Neurone {
 	 * @param p 
 	 * new membrane potential (double)
 	 */
-	void setPotential( double p);
+	void setPotential( long double p);
 	/**
 	 * @brief Set the external current 
 	 * @param c 
@@ -105,11 +105,11 @@ class Neurone {
 	 * @param j 
 	 * J the amplitude of the futur spike (double) 
 	*/
-	void receive(unsigned long clockDelay, double j);
+	void receive(unsigned long clockDelay, long double j);
 	
 	
 	private : 
-	double membranePotential; ///< Membrane potential 
+	long double membranePotential; ///< Membrane potential 
 	unsigned long timeSpikes; ///< Time of spikes occurence
 	double currentExt;        ///< External current 
 	int numberSpikes;         ///< Number of spikes
