@@ -3,12 +3,15 @@
  */
 
 #include "neurone.hpp" 
-#include "constant.hpp"
-#include <cmath>
 #include <assert.h>
+#include <random>
 
 
 using namespace std; 
+
+random_device rd;
+mt19937 gen(rd());
+poisson_distribution<> poisson(Random);
 
 
 //Constructeur
@@ -72,7 +75,7 @@ bool Neurone::update(unsigned long time) {
 		{		
 			unsigned long tArrival = clock % (delayStep + 1); 
 			
-			if ( getPotential() > Vth) {
+			if ( getPotential() > teta) {
 			 numberSpikes += 1;
 			 spike = true; 
 			 timeSpikes = clock; 
@@ -85,7 +88,10 @@ bool Neurone::update(unsigned long time) {
 				
 			assert( tArrival < buffer.size() );
 			long double potential = getPotential();
-			setPotential( exp(-h/tao) * potential +  R*(1-exp(-h/tao)) * getCurrentExt() + buffer[tArrival]  );
+			setPotential( exp(-h/tao) * potential +  R*(1-exp(-h/tao)) * getCurrentExt() 
+			              + buffer[tArrival] + poisson(gen)  );                          // juste ??
+			//set potential depending on the buffer content (given spikes)
+			// and the random connection with outside (poisson law) 
 		}
 		
 

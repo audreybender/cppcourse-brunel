@@ -35,17 +35,17 @@ TEST (NeuroneTest, spikeTime) {
 	EXPECT_EQ( 0.0, neurone.getPotential() ); 
 	
 }
-/*
+
 TEST (TwoNeurons, SpikeReception) {
 	Neurone N1; 
 	Neurone N2;
 	N1.setCurrentExt(1.01); 
 	
-	N1.update(925); //N1 spike 
-	N2.update(940); //After delay
-	long double potential =  N2.getPotential()*1000;
-	EXPECT_GT( potential , 0.0 );  
-} */
+	N1.update(941); //N1 spike 
+	N2.update(941); //After delay
+	double potential =  N2.getPotential()*10;
+	EXPECT_NE( potential , 0.0 );  
+} 
 
 int main(int argc, char **argv) {
 	::testing::InitGoogleTest(&argc, argv);

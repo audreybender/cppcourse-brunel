@@ -10,13 +10,14 @@
 
 #include <iostream>
 #include <cmath>
-#include <array>
+#include <vector>
 #include "constant.hpp"
 #include "neurone.hpp"
 
 using namespace std; 
 
-typedef array<array<Neurone, 12500>, 12500> Neurones;   
+typedef vector<vector<int>> NeuronesConnection;   
+typedef vector<Neurone*> Brain;
 
 /**
  * @class Network 
@@ -31,7 +32,7 @@ class Network {
 	 * 
 	 * @param Neurones 
 	 */
-	Network( Neurones network);
+	Network();
 	/**
 	 * @brief Destructeur
 	 */
@@ -46,21 +47,13 @@ class Network {
 	 * an excitatory neuron will increase MP 
 	 * 
 	*/
-	void update(); 
-	
-	/**
-	 * @brief Receive external current 
-	 * 
-	 * Will call the receive function of neurones 
-	 * randomly chosen to be connected with the outside 
-	 * 
-	*/
-	void receive(unsigned long clockDelay, long double j);
+	void update(unsigned long time); 
 	
 	
-	private : 
 	
-	Neurones network; ///< Matrice of 12500 neurones
+	NeuronesConnection neurones; ///< Matrice of 12500 neurones
+	Brain brain; 
+	
 	
 	
 };
