@@ -9,10 +9,6 @@
 
 using namespace std; 
 
-random_device rd;
-mt19937 gen(rd());
-poisson_distribution<> poisson(Random);
-
 
 //Constructeur
 Neurone::Neurone( long double membranePotential, unsigned long timeSpikes,
@@ -23,6 +19,7 @@ Neurone::Neurone( long double membranePotential, unsigned long timeSpikes,
 			
 		{
 			refStep = ( static_cast<const unsigned long>(refTime / h) );
+			//Initialization of the spike buffer
 			for ( auto& element : buffer) {
 				element = 0; 
 			} 
@@ -30,6 +27,7 @@ Neurone::Neurone( long double membranePotential, unsigned long timeSpikes,
 		
 //Destructeur 
 Neurone::~Neurone(){}
+
 //Getters
 long double Neurone::getPotential() const {
 	return membranePotential; 
@@ -75,7 +73,7 @@ bool Neurone::update(unsigned long time) {
 		{		
 			unsigned long tArrival = clock % (delayStep + 1); 
 			
-			if ( getPotential() > teta) {
+			if ( getPotential() > Vteta) { //If neurone spikes
 			 numberSpikes += 1;
 			 spike = true; 
 			 timeSpikes = clock; 
@@ -89,9 +87,8 @@ bool Neurone::update(unsigned long time) {
 			assert( tArrival < buffer.size() );
 			long double potential = getPotential();
 			setPotential( exp(-h/tao) * potential +  R*(1-exp(-h/tao)) * getCurrentExt() 
-			              + buffer[tArrival] + poisson(gen)  );                          // juste ??
+			              + buffer[tArrival] );                         
 			//set potential depending on the buffer content (given spikes)
-			// and the random connection with outside (poisson law) 
 		}
 		
 
@@ -106,5 +103,4 @@ void Neurone::receive(unsigned long clockDelay, long double j)
 {
 	const size_t tSpike = (clockDelay%(delayStep + 1)); 
 	buffer[tSpike] += j; 
-
 }

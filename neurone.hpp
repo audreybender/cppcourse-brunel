@@ -1,5 +1,5 @@
 /** 
- * @file neurone.h 
+ * @file neurone.hpp 
  * @brief function prototypes for the neurone
  * 
  * @author Audrey Bender
@@ -39,6 +39,7 @@ class Neurone {
 	 * @brief Destructeur
 	 */
 	~Neurone();
+	
 	//Getter 
 	/**
 	 * @brief Get the membrane potential 
@@ -94,6 +95,7 @@ class Neurone {
 	 * @return booleen true if spike occured 
 	 */
 	bool update(unsigned long time); 
+	
 	/**
 	 * @brief Add a futur spike in the buffer
 	 * If the neurone1 spikes the neurone link to it will receive a new 
@@ -106,15 +108,15 @@ class Neurone {
 	 * J the amplitude of the futur spike (double) 
 	*/
 	void receive(unsigned long clockDelay, long double j);
-	
+
 	
 	private : 
-	long double membranePotential; ///< Membrane potential 
-	unsigned long timeSpikes; ///< Time of spikes occurence
-	double currentExt;        ///< External current 
-	int numberSpikes;         ///< Number of spikes
-	unsigned long clock;      ///< Individual clock of the neurone
-	double refStep;           ///< Reference step 
+	long double membranePotential;    ///< Membrane potential 
+	unsigned long timeSpikes;         ///< Time of spikes occurence
+	double currentExt;                ///< External current 
+	int numberSpikes;                 ///< Number of spikes
+	unsigned long clock;              ///< Individual clock of the neurone
+	double refStep;                   ///< Reference step 
 	array<double, bufferSize> buffer; ///< Buffer to insert futur spikes
 	
 };

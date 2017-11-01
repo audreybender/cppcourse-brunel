@@ -4,82 +4,141 @@
 
 #include "Network.hpp" 
 #include <random>
+#include <cassert>
+#include <fstream>
+
 
 
 using namespace std; 
 
-
+const string nomFichier( "dataNetwork" );
 
 //Constructeur 
 Network::Network() 
-{	
-
-default_random_engine generator;
- NeuronesConnection N(12500, vector<int>(12500, 0));
- neurones = N;
-   for( size_t j(0); j <= 12500; ++j) {
-	   
-       int connectNumber(0);
-	  do {
-		  
-	    for (size_t i(0); i < Ne; ++i ) {
-			
-	     	uniform_int_distribution<int> distribution(0,1);
-			neurones[j][i] = distribution(generator); 
-			//Connection randomly and uniformly distributed
-			if ( neurones[j][i] == 1 ) {
-				connectNumber += 1; 
-			}
-		  }
-	   }while (connectNumber != Ce );
-	   
-	 do {
-	   for (size_t i(Ne); i <= 12500 ; ++i ) {
-		   uniform_int_distribution<int> distribution(0,1);
-		   neurones[j][i] = distribution(generator); 
-	     if ( neurones[j][i] == 1 ) {
-				connectNumber += 1; 
-			}
-	    }
-    }while( connectNumber != (Ce+Ci) );
-  } 
- 
-  for ( size_t j(0); j <= 2; ++j ) {
-	  Neurone* N1; 
-	  brain.push_back(N1);
-  }
-  cerr << " contructor done " << endl; 
- 
+{
+	//Initialization of the connections matrice
+	//Random targets connections
+	random_device rd; 
+	mt19937 gen(rd()); 
+	uniform_int_distribution<> excit(0, (Nexcit-1));
+	uniform_int_distribution<> inhib(Nexcit, (Ntot-1));
+	
+	Targets N(Ntot, vector<size_t>(Cexcit, 0));
+	targets = N;
+	//Ce connections for excitory neurons 
+	for( size_t target(0); target < Ntot; ++target) {
+		for(size_t i(0); i < Cexcit; ++i) {
+			targets[target].push_back( excit(gen));
+		}
+	}
+	//Ci connections for inhibitory neurones
+	for( size_t target(0); target < Ntot; ++target) {
+		for( size_t i(0); i < Cinhib; ++i){
+			targets[target].push_back( inhib(gen));
+		}
+	}
+	
+	//Initialization of the vectors 
+	// SpikesBuffer, potentials, numberSpikes, timeSpikes
+	// iExt, sizes should correspond to the numbers of neurones
+    Spikes S(Ntot, vector<double> (bufferSize, 0.0));
+    spikesBuffer = S;
+	potentials =vector<double> (Ntot, 0.0);
+	numberSpikes= vector<int> (Ntot, 0); 
+	timeSpikes = vector<size_t> (Ntot, 0.0);; 
+	iExt = vector<double> (Ntot , 0.0);
+		
 }
 
 //Destructeur 
 Network::~Network()
-{
-	cerr << " destruction begins " << endl; 
-	brain.clear();
-	
-}
+{}
 
 //Methodes
 
-void Network::update(unsigned long time) {
+void Network::update(size_t tstop) {
 
-	for (  size_t j(0); j < neurones.size() ; ++j ) {
-		for( size_t i(0); i < Ne; ++i ) {
-			if( neurones[j][i] == 1 ) {
-				if( brain[i]->update(time) ) {
-					brain[j]->receive( (brain[i]->getClock() + delay ), Je); 
-				}
+
+for( size_t neuId(0); neuId < Ntot; ++neuId ) {
+	size_t t= 0;  
+   while( t < tstop/h+delayStep) {
+	const size_t tArrival = t%(delayStep+1);
+   //if neuron spikes
+	 if ( potentials[neuId] > Vteta) {            
+			++numberSpikes[neuId]; 
+			timeSpikes[neuId] = t; 
+			potentials[neuId] = 0.0;
+		
+		//if the neuron is excitatory, give a Je potential to its 
+		//targets neurons (fill the spikesBuffer ) 
+		if(neuId < Cexcit ){                
+		 for( size_t target= 0; target < targets[neuId].size(); ++target ) {
+			const size_t tSpike = ( t+delayStep)%(delayStep+1);
+			const size_t targetId = targets[neuId][target];
+			spikesBuffer[targetId][tSpike] += Je ; 
+	    	}
+	    }	
+	   //if inhibitory neurons give a Ji potential 
+	    if ( Cexcit <= neuId and neuId < (Cexcit+Cinhib) ) {
+			for( size_t target= 0; target < targets[neuId].size(); ++target ) {
+			const size_t tSpike = ( t+delayStep)%(delayStep+1);
+			const size_t targetId = targets[neuId][target];
+			spikesBuffer[targetId][tSpike] += Ji ;    
+	    	}
+	  }  
+	}
+	
+	//If the neuron is refractory
+	if( (timeSpikes[neuId] > 0) and ( timeSpikes[neuId]-t < refTime/h)){
+		potentials[neuId] = 0.0; 
+   	}else{
+		//Set the new potential : exponential + external( = 0.0) potential
+		//+spike from other neurons(buffer) and random external connection
+		static random_device rd; 
+		static mt19937 gen(rd());
+		static poisson_distribution<> connSpikes(Random); 
+		
+		potentials[neuId] = exp(-h/tao) * potentials[neuId] +  R*(1-exp(-h/tao)) * iExt[neuId] 
+			              + spikesBuffer[neuId][tArrival] + Je * connSpikes(gen); 
+		}
+		//Clear spike buffer at tArrival
+		spikesBuffer[neuId][tArrival] = 0.0; 
+		++t;
+	}
+  }
+}
+
+void Network::display() {
+	
+    ofstream fichier(nomFichier);
+	if(fichier.fail()) {
+		cerr << "Erreur : le fichier ne peut pas s'ouvrir ! " << endl;
+	}else{
+		
+	double tStop;	
+	
+	cout << "Simulation of 12500 neurons. " << endl;
+	cout << "Time interval in ms ? " << endl; 
+	cin >> tStop;
+	
+	size_t simTime(0.0);
+  // fichier << " Spike time : " << '\t' << "Neurone : " << '\n';
+   
+   for( double t= simTime; t < tStop ; ++t ) {
+	   
+	    update(t);
+	   
+	    for( size_t i(0); i < Ntot; ++i) {
+		  if(timeSpikes[i] > 0.0){ 
+		    fichier <<'\t' << timeSpikes[i] << '\t' << i << '\n';
 			}
 		}
 		
-		for( size_t i(Ne); i < neurones.size() ; ++i ) {
-			if ( neurones[j][i] == 1 ) {
-				if( brain[i]->update(time) ) {
-					brain[j]->receive( (brain[i]->getClock() + delay ), Ji ); 
-				}
-			}
-		}
+		simTime = t; 
+	  }
+	  fichier.close();
 	}
-	cerr << " update done " << endl; 
+  cout << " Look at the new file dataNetwork ! " << endl;
+
 }
+
