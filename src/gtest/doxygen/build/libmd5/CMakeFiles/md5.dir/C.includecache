@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/localguest/Documents/SVIII/Neurone/gtest/doxygen/libmd5/md5.c
+string.h
+-
+sys/types.h
+-
+md5.h
+/home/localguest/Documents/SVIII/Neurone/gtest/doxygen/libmd5/md5.h
+
+/home/localguest/Documents/SVIII/Neurone/gtest/doxygen/libmd5/md5.h
+md5_loc.h
+/home/localguest/Documents/SVIII/Neurone/gtest/doxygen/libmd5/md5_loc.h
+
+/home/localguest/Documents/SVIII/Neurone/gtest/doxygen/libmd5/md5_loc.h
+
