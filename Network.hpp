@@ -12,7 +12,8 @@
 #include <cmath>
 #include <vector>
 #include "constant.hpp"
-//#include "neurone.hpp"
+#include "gtest/gtest.h" 
+
 
 using namespace std; 
 
@@ -42,11 +43,11 @@ class Network {
 	 * Manage exchange of potential between a spiking neuron and its targets,
 	 * also refractory time. In brief the set the potential according to time.
 	 * 
-	 * @param tstop
+	 * @param tstop               <<<<<<<<
 	 * = the lenght of the simulation
 	 * 
 	*/
-	void update(size_t tstop); 
+	void update(size_t tstop, size_t clock); 
 	/**
 	 * @brief Starts the simulation of a network and stores datas
 	 * 
@@ -65,6 +66,8 @@ class Network {
 	vector<int> numberSpikes;     ///< Number of time the neuron had spiked
 	vector<size_t> timeSpikes;    ///< The last time the neuron had spiked
 	vector<double> iExt;          ///< Vector of external current that is given to a specific neuron
+	FRIEND_TEST(NetworkTest, numberSpikes);
+	FRIEND_TEST(NetworkTest, connectionNumber);
 	
 };
 

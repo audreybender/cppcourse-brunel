@@ -23,18 +23,19 @@ Network::Network()
 	uniform_int_distribution<> excit(0, (Nexcit-1));
 	uniform_int_distribution<> inhib(Nexcit, (Ntot-1));
 	
-	Targets N(Ntot, vector<size_t>(Cexcit, 0));
+	Targets N(Ntot, vector<size_t>(0));
 	targets = N;
-	//Ce connections for excitory neurons 
-	for( size_t target(0); target < Ntot; ++target) {
+	for( size_t target(0); target < Ntot; ++target){ 
+	//Ce connections with excitory neurons 
 		for(size_t i(0); i < Cexcit; ++i) {
-			targets[target].push_back( excit(gen));
+			int transmitter( excit(gen) ); 
+			targets[transmitter].push_back(target);
 		}
-	}
-	//Ci connections for inhibitory neurones
-	for( size_t target(0); target < Ntot; ++target) {
+		
+	//Ci connections with inhibitory neurones
 		for( size_t i(0); i < Cinhib; ++i){
-			targets[target].push_back( inhib(gen));
+			int transmitter( inhib(gen) ); 
+			targets[transmitter].push_back(target);
 		}
 	}
 	
@@ -56,42 +57,46 @@ Network::~Network()
 
 //Methodes
 
-void Network::update(size_t tstop) {
+void Network::update(size_t tstop, size_t clock) {
 
-
-for( size_t neuId(0); neuId < Ntot; ++neuId ) {
-	size_t t= 0;  
-   while( t < tstop/h+delayStep) {
-	const size_t tArrival = t%(delayStep+1);
-   //if neuron spikes
+   size_t t = 0;   
+  while( t < tstop) {
+   for( size_t neuId(0); neuId < Ntot; ++neuId ) {
+	 const size_t tArrival = clock % (delayStep+1); //Convertion for the buffer
+     //if neuron spikes
 	 if ( potentials[neuId] > Vteta) {            
 			++numberSpikes[neuId]; 
-			timeSpikes[neuId] = t; 
+			timeSpikes[neuId] = clock;   
 			potentials[neuId] = 0.0;
 		
 		//if the neuron is excitatory, give a Je potential to its 
 		//targets neurons (fill the spikesBuffer ) 
 		if(neuId < Cexcit ){                
 		 for( size_t target= 0; target < targets[neuId].size(); ++target ) {
-			const size_t tSpike = ( t+delayStep)%(delayStep+1);
+			const size_t tSpike = ( clock+delayStep)%(delayStep+1);
 			const size_t targetId = targets[neuId][target];
 			spikesBuffer[targetId][tSpike] += Je ; 
-	    	}
+	      }
 	    }	
-	   //if inhibitory neurons give a Ji potential 
-	    if ( Cexcit <= neuId and neuId < (Cexcit+Cinhib) ) {
-			for( size_t target= 0; target < targets[neuId].size(); ++target ) {
-			const size_t tSpike = ( t+delayStep)%(delayStep+1);
+	    
+	    //if inhibitory neurons give a Ji potential 
+	    if ( Cexcit <= neuId and neuId <= (Cexcit+Cinhib) ) {
+		 for( size_t target= 0; target < targets[neuId].size(); ++target ) {
+			const size_t tSpike = ( clock+delayStep)%(delayStep+1);
 			const size_t targetId = targets[neuId][target];
 			spikesBuffer[targetId][tSpike] += Ji ;    
-	    	}
+	    }
 	  }  
 	}
 	
+	assert( tArrival < bufferSize );
 	//If the neuron is refractory
-	if( (timeSpikes[neuId] > 0) and ( timeSpikes[neuId]-t < refTime/h)){
+	if( (timeSpikes[neuId] > 0) and ( (clock)-timeSpikes[neuId] < refTime/h) ){
 		potentials[neuId] = 0.0; 
    	}else{
+		//TimeSpike had been saved, reinitialisation
+		timeSpikes[neuId] = 0.0;
+		
 		//Set the new potential : exponential + external( = 0.0) potential
 		//+spike from other neurons(buffer) and random external connection
 		static random_device rd; 
@@ -103,8 +108,9 @@ for( size_t neuId(0); neuId < Ntot; ++neuId ) {
 		}
 		//Clear spike buffer at tArrival
 		spikesBuffer[neuId][tArrival] = 0.0; 
-		++t;
-	}
+	 }
+	++clock;
+	++t;
   }
 }
 
@@ -121,20 +127,29 @@ void Network::display() {
 	cout << "Time interval in ms ? " << endl; 
 	cin >> tStop;
 	
-	size_t simTime(0.0);
-  // fichier << " Spike time : " << '\t' << "Neurone : " << '\n';
+	
+   //Convertion in step
+   tStop = tStop/h;
    
-   for( double t= simTime; t < tStop ; ++t ) {
+   for( size_t t = 0; t < tStop ; ++t ) {
 	   
-	    update(t);
+	    update(1, t);
 	   
-	    for( size_t i(0); i < Ntot; ++i) {
-		  if(timeSpikes[i] > 0.0){ 
-		    fichier <<'\t' << timeSpikes[i] << '\t' << i << '\n';
-			}
-		}
+	   
+	    for( size_t i(0); i < Ntot; ++i) {	
 		
-		simTime = t; 
+		  if(timeSpikes[i] > 0.0){ 
+			//Writing time ( in steps ) of spikes of each neurons
+		    fichier <<'\t' << timeSpikes[i]*h << '\t' << i << '\n';
+		   
+		    if ( i== 461 ){
+				cerr << " Number : " << numberSpikes[i] << endl;
+				cerr << " TimeSpikes : " << timeSpikes[i]*h << endl;
+				
+			}
+		  }
+		}
+	//	cerr << potentials[461] << endl;
 	  }
 	  fichier.close();
 	}

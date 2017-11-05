@@ -71,7 +71,7 @@ bool Neurone::update(unsigned long time) {
 		
 		while( clock < tStop) 
 		{		
-			unsigned long tArrival = clock % (delayStep + 1); 
+			unsigned long tArrival = clock % (delayStep + 1); //convert in steps
 			
 			if ( getPotential() > Vteta) { //If neurone spikes
 			 numberSpikes += 1;
@@ -101,6 +101,6 @@ bool Neurone::update(unsigned long time) {
 
 void Neurone::receive(unsigned long clockDelay, long double j)
 {
-	const size_t tSpike = (clockDelay%(delayStep + 1)); 
+	const size_t tSpike = (clockDelay%(delayStep + 1)); //Change in steps
 	buffer[tSpike] += j; 
 }

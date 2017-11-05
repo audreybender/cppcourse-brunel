@@ -18,11 +18,11 @@ static double const tao(20);                     ///< Time constant ( = R*C )
 static double const R(20);	                     ///< Membrane resistance = tao / C 
 static double const h(0.1);                      ///< Time step 
 static unsigned long const refTime(1);           ///< Refractory Time ms
-static unsigned long const delay(15);            ///< Delay between sending and receiving spike
+static unsigned long const delay(1.5);            ///< Delay between sending and receiving spike
 static double const Je(0.1);                     ///< Amplitude of spike from excitatory neurones
-static double const Ji( (-5) * Je);              ///< Amplitude of spike from inhibitory neurones
-static int const bufferSize( delay / h + 1);     ///< The size of the buffer (for futur spike)
-static unsigned long const delayStep = delay/h ; ///< Step of delay
+static double const Ji(-0.5);                    ///< Amplitude of spike from inhibitory neurones
+static unsigned long const delayStep = 15 ;      ///< Step of delay (delay/h)
+static int const bufferSize( delayStep + 1);      ///< The size of the buffer (for futur spike)
 static int const Nexcit(10000);                  ///< Number of excitatory neurones
 static int const Cexcit(1000);                   ///< Number of connections of excitatory neurones (Nexcit*0.1)
 static int const Ninhib(2500);                   ///< Number of inhibitory neurones

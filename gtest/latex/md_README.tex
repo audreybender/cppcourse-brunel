@@ -1,0 +1,127 @@
+\href{https://travis-ci.org/google/googletest}{\tt !\mbox{[}Build Status\mbox{]}(https\-://travis-\/ci.\-org/google/googletest.\-svg?branch=master)} \href{https://ci.appveyor.com/project/GoogleTestAppVeyor/googletest/branch/master}{\tt !\mbox{[}Build status\mbox{]}(https\-://ci.\-appveyor.\-com/api/projects/status/4o38plt0xbo1ubc8/branch/master?svg=true)}
+
+Welcome to {\bfseries Google Test}, Google's C++ test framework!
+
+This repository is a merger of the formerly separate Google\-Test and Google\-Mock projects. These were so closely related that it makes sense to maintain and release them together.
+
+Please see the project page above for more information as well as the mailing list for questions, discussions, and development. There is also an I\-R\-C channel on \href{https://webchat.oftc.net/}{\tt O\-F\-T\-C} (irc.\-oftc.\-net) \#gtest available. Please join us!
+
+Getting started information for {\bfseries Google Test} is available in the Google Test Primer documentation.
+
+{\bfseries Google Mock} is an extension to Google Test for writing and using C++ mock classes. See the separate Google Mock documentation.
+
+More detailed documentation for googletest (including build instructions) are in its interior googletest/\-R\-E\-A\-D\-M\-E.md file.
+
+\subsection*{Features}
+
+
+\begin{DoxyItemize}
+\item An \href{https://en.wikipedia.org/wiki/XUnit}{\tt x\-Unit} test framework.
+\item Test discovery.
+\item A rich set of assertions.
+\item User-\/defined assertions.
+\item Death tests.
+\item Fatal and non-\/fatal failures.
+\item Value-\/parameterized tests.
+\item Type-\/parameterized tests.
+\item Various options for running the tests.
+\item X\-M\-L test report generation.
+\end{DoxyItemize}
+
+\subsection*{Platforms}
+
+Google test has been used on a variety of platforms\-:
+
+
+\begin{DoxyItemize}
+\item Linux
+\item Mac O\-S X
+\item Windows
+\item Cygwin
+\item Min\-G\-W
+\item Windows Mobile
+\item Symbian
+\end{DoxyItemize}
+
+\subsection*{Who Is Using Google Test?}
+
+In addition to many internal projects at Google, Google Test is also used by the following notable projects\-:
+
+
+\begin{DoxyItemize}
+\item The \href{http://www.chromium.org/}{\tt Chromium projects} (behind the Chrome browser and Chrome O\-S).
+\item The \href{http://llvm.org/}{\tt L\-L\-V\-M} compiler.
+\item \href{https://github.com/google/protobuf}{\tt Protocol Buffers}, Google's data interchange format.
+\item The \href{http://opencv.org/}{\tt Open\-C\-V} computer vision library.
+\item \href{https://github.com/tiny-dnn/tiny-dnn}{\tt tiny-\/dnn}\-: header only, dependency-\/free deep learning framework in C++11.
+\end{DoxyItemize}
+
+\subsection*{Related Open Source Projects}
+
+\href{https://github.com/nholthaus/gtest-runner}{\tt G\-Test Runner} is a Qt5 based automated test-\/runner and Graphical User Interface with powerful features for Windows and Linux platforms.
+
+\href{https://github.com/ospector/gtest-gbar}{\tt Google Test U\-I} is test runner that runs your test binary, allows you to track its progress via a progress bar, and displays a list of test failures. Clicking on one shows failure text. Google Test U\-I is written in C\#.
+
+\href{https://github.com/kinow/gtest-tap-listener}{\tt G\-Test T\-A\-P Listener} is an event listener for Google Test that implements the \href{https://en.wikipedia.org/wiki/Test_Anything_Protocol}{\tt T\-A\-P protocol} for test result output. If your test runner understands T\-A\-P, you may find it useful.
+
+\href{https://github.com/google/gtest-parallel}{\tt gtest-\/parallel} is a test runner that runs tests from your binary in parallel to provide significant speed-\/up.
+
+\subsection*{Requirements}
+
+Google Test is designed to have fairly minimal requirements to build and use with your projects, but there are some. Currently, we support Linux, Windows, Mac O\-S X, and Cygwin. We will also make our best effort to support other platforms (e.\-g. Solaris, A\-I\-X, and z/\-O\-S). However, since core members of the Google Test project have no access to these platforms, Google Test may have outstanding issues there. If you notice any problems on your platform, please notify \href{https://groups.google.com/forum/#!forum/googletestframework}{\tt googletestframework@googlegroups.\-com}. Patches for fixing them are even more welcome!
+
+\subsubsection*{Linux Requirements}
+
+These are the base requirements to build and use Google Test from a source package (as described below)\-:
+
+
+\begin{DoxyItemize}
+\item G\-N\-U-\/compatible Make or gmake
+\item P\-O\-S\-I\-X-\/standard shell
+\item P\-O\-S\-I\-X(-\/2) Regular Expressions (regex.\-h)
+\item A C++98-\/standard-\/compliant compiler
+\end{DoxyItemize}
+
+\subsubsection*{Windows Requirements}
+
+
+\begin{DoxyItemize}
+\item Microsoft Visual C++ 2010 or newer
+\end{DoxyItemize}
+
+\subsubsection*{Cygwin Requirements}
+
+
+\begin{DoxyItemize}
+\item Cygwin v1.\-5.\-25-\/14 or newer
+\end{DoxyItemize}
+
+\subsubsection*{Mac O\-S X Requirements}
+
+
+\begin{DoxyItemize}
+\item Mac O\-S X v10.\-4 Tiger or newer
+\item Xcode Developer Tools
+\end{DoxyItemize}
+
+\subsubsection*{Requirements for Contributors}
+
+We welcome patches. If you plan to contribute a patch, you need to build Google Test and its own tests from a git checkout (described below), which has further requirements\-:
+
+
+\begin{DoxyItemize}
+\item \href{https://www.python.org/}{\tt Python} v2.\-3 or newer (for running some of the tests and re-\/generating certain source files from templates)
+\item \href{https://cmake.org/}{\tt C\-Make} v2.\-6.\-4 or newer
+\end{DoxyItemize}
+
+\subsection*{Regenerating Source Files}
+
+Some of Google Test's source files are generated from templates (not in the C++ sense) using a script. For example, the file include/gtest/internal/gtest-\/type-\/util.\-h.\-pump is used to generate gtest-\/type-\/util.\-h in the same directory.
+
+You don't need to worry about regenerating the source files unless you need to modify them. You would then modify the corresponding {\ttfamily .pump} files and run the '\href{googletest/scripts/pump.py}{\tt pump.\-py}' generator script. See the Pump Manual.
+
+\subsubsection*{Contributing Code}
+
+We welcome patches. Please read the Developer's Guide for how you can contribute. In particular, make sure you have signed the Contributor License Agreement, or we won't be able to accept the patch.
+
+Happy testing! 

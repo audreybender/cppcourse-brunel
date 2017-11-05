@@ -1,0 +1,230 @@
+\hypertarget{classNeurone}{\section{Neurone Class Reference}
+\label{classNeurone}\index{Neurone@{Neurone}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classNeurone_a999815ab5fb1d2c753533c6639ea931b}{Neurone} (long double membrane\-Potential=0.\-0, unsigned long time\-Spikes=0, double current\-Ext=0.\-0, unsigned long number\-Spikes=0, unsigned long clock=0, double ref\-Step=(ref\-Time/h))
+\begin{DoxyCompactList}\small\item\em Constructeur. \end{DoxyCompactList}\item 
+\hypertarget{classNeurone_aeb6fa39da618a5e19cc91911630fbdc1}{\hyperlink{classNeurone_aeb6fa39da618a5e19cc91911630fbdc1}{$\sim$\-Neurone} ()}\label{classNeurone_aeb6fa39da618a5e19cc91911630fbdc1}
+
+\begin{DoxyCompactList}\small\item\em Destructeur. \end{DoxyCompactList}\item 
+long double \hyperlink{classNeurone_a0786045c61c37a92f9c469e21c840749}{get\-Potential} () const 
+\begin{DoxyCompactList}\small\item\em Get the membrane potential. \end{DoxyCompactList}\item 
+double \hyperlink{classNeurone_ab9bc4b7e92b4f9b72204c3bee664fc0c}{get\-Number\-Spikes} () const 
+\begin{DoxyCompactList}\small\item\em Get number of spikes. \end{DoxyCompactList}\item 
+double \hyperlink{classNeurone_a0da764ac135dcd7ede665bf3c2cba140}{get\-Time\-Spikes} () const 
+\begin{DoxyCompactList}\small\item\em Get time of spikes occurence. \end{DoxyCompactList}\item 
+double \hyperlink{classNeurone_aa18f7bb1c2d33d5d953e8d9084947ffd}{get\-Current\-Ext} () const 
+\begin{DoxyCompactList}\small\item\em Get extrenal current. \end{DoxyCompactList}\item 
+double \hyperlink{classNeurone_a41ff0326ad0d84b00a8c968c7b7b9a42}{get\-Clock} () const 
+\begin{DoxyCompactList}\small\item\em Get clock of the neurone. \end{DoxyCompactList}\item 
+void \hyperlink{classNeurone_af3913a8bc53e5fbd5b8f29633a123b6b}{set\-Potential} (long double p)
+\begin{DoxyCompactList}\small\item\em Set the membrane potential. \end{DoxyCompactList}\item 
+void \hyperlink{classNeurone_a8c06c1d2ba2e7516e15df22e0f68a7d6}{set\-Current\-Ext} (double c)
+\begin{DoxyCompactList}\small\item\em Set the external current. \end{DoxyCompactList}\item 
+void \hyperlink{classNeurone_a2bc48d7fed6bfb214748785981415f39}{set\-Number\-Spikes} (int n)
+\begin{DoxyCompactList}\small\item\em Set the number of spikes. \end{DoxyCompactList}\item 
+bool \hyperlink{classNeurone_a46e5533a614e37f945595847dedc6b55}{update} (unsigned long time)
+\begin{DoxyCompactList}\small\item\em Update the membrane Potential. \end{DoxyCompactList}\item 
+void \hyperlink{classNeurone_ab527d646a2b6adf957b38e7631e60e14}{receive} (unsigned long clock\-Delay, long double j)
+\begin{DoxyCompactList}\small\item\em Add a futur spike in the buffer If the neurone1 spikes the neurone link to it will receive a new Membrane Potential J at his time + Delay so potential is put In its buffer at clock + delay. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classNeurone_a999815ab5fb1d2c753533c6639ea931b}{\index{Neurone@{Neurone}!Neurone@{Neurone}}
+\index{Neurone@{Neurone}!Neurone@{Neurone}}
+\subsubsection[{Neurone}]{\setlength{\rightskip}{0pt plus 5cm}Neurone\-::\-Neurone (
+\begin{DoxyParamCaption}
+\item[{long double}]{membrane\-Potential = {\ttfamily 0.0}, }
+\item[{unsigned long}]{time\-Spikes = {\ttfamily 0}, }
+\item[{double}]{current\-Ext = {\ttfamily 0.0}, }
+\item[{unsigned long}]{number\-Spikes = {\ttfamily 0}, }
+\item[{unsigned long}]{clock = {\ttfamily 0}, }
+\item[{double}]{ref\-Step = {\ttfamily (~refTime~/~h)}}
+\end{DoxyParamCaption}
+)}}\label{classNeurone_a999815ab5fb1d2c753533c6639ea931b}
+
+
+Constructeur. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em membrane\-Potential} & \\
+\hline
+{\em time\-Spikes} & occurence \\
+\hline
+{\em current\-Ext} & \\
+\hline
+{\em number\-Spikes} & \\
+\hline
+{\em clock} & \\
+\hline
+{\em ref\-Step} & \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classNeurone_a41ff0326ad0d84b00a8c968c7b7b9a42}{\index{Neurone@{Neurone}!get\-Clock@{get\-Clock}}
+\index{get\-Clock@{get\-Clock}!Neurone@{Neurone}}
+\subsubsection[{get\-Clock}]{\setlength{\rightskip}{0pt plus 5cm}double Neurone\-::get\-Clock (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}}\label{classNeurone_a41ff0326ad0d84b00a8c968c7b7b9a42}
+
+
+Get clock of the neurone. 
+
+\begin{DoxyReturn}{Returns}
+the clock of the neurone 
+\end{DoxyReturn}
+\hypertarget{classNeurone_aa18f7bb1c2d33d5d953e8d9084947ffd}{\index{Neurone@{Neurone}!get\-Current\-Ext@{get\-Current\-Ext}}
+\index{get\-Current\-Ext@{get\-Current\-Ext}!Neurone@{Neurone}}
+\subsubsection[{get\-Current\-Ext}]{\setlength{\rightskip}{0pt plus 5cm}double Neurone\-::get\-Current\-Ext (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}}\label{classNeurone_aa18f7bb1c2d33d5d953e8d9084947ffd}
+
+
+Get extrenal current. 
+
+\begin{DoxyReturn}{Returns}
+external current 
+\end{DoxyReturn}
+\hypertarget{classNeurone_ab9bc4b7e92b4f9b72204c3bee664fc0c}{\index{Neurone@{Neurone}!get\-Number\-Spikes@{get\-Number\-Spikes}}
+\index{get\-Number\-Spikes@{get\-Number\-Spikes}!Neurone@{Neurone}}
+\subsubsection[{get\-Number\-Spikes}]{\setlength{\rightskip}{0pt plus 5cm}double Neurone\-::get\-Number\-Spikes (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}}\label{classNeurone_ab9bc4b7e92b4f9b72204c3bee664fc0c}
+
+
+Get number of spikes. 
+
+\begin{DoxyReturn}{Returns}
+number of spikes 
+\end{DoxyReturn}
+\hypertarget{classNeurone_a0786045c61c37a92f9c469e21c840749}{\index{Neurone@{Neurone}!get\-Potential@{get\-Potential}}
+\index{get\-Potential@{get\-Potential}!Neurone@{Neurone}}
+\subsubsection[{get\-Potential}]{\setlength{\rightskip}{0pt plus 5cm}long double Neurone\-::get\-Potential (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}}\label{classNeurone_a0786045c61c37a92f9c469e21c840749}
+
+
+Get the membrane potential. 
+
+\begin{DoxyReturn}{Returns}
+membrane potential 
+\end{DoxyReturn}
+\hypertarget{classNeurone_a0da764ac135dcd7ede665bf3c2cba140}{\index{Neurone@{Neurone}!get\-Time\-Spikes@{get\-Time\-Spikes}}
+\index{get\-Time\-Spikes@{get\-Time\-Spikes}!Neurone@{Neurone}}
+\subsubsection[{get\-Time\-Spikes}]{\setlength{\rightskip}{0pt plus 5cm}double Neurone\-::get\-Time\-Spikes (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}}\label{classNeurone_a0da764ac135dcd7ede665bf3c2cba140}
+
+
+Get time of spikes occurence. 
+
+\begin{DoxyReturn}{Returns}
+the time when spike occurs 
+\end{DoxyReturn}
+\hypertarget{classNeurone_ab527d646a2b6adf957b38e7631e60e14}{\index{Neurone@{Neurone}!receive@{receive}}
+\index{receive@{receive}!Neurone@{Neurone}}
+\subsubsection[{receive}]{\setlength{\rightskip}{0pt plus 5cm}void Neurone\-::receive (
+\begin{DoxyParamCaption}
+\item[{unsigned long}]{clock\-Delay, }
+\item[{long double}]{j}
+\end{DoxyParamCaption}
+)}}\label{classNeurone_ab527d646a2b6adf957b38e7631e60e14}
+
+
+Add a futur spike in the buffer If the neurone1 spikes the neurone link to it will receive a new Membrane Potential J at his time + Delay so potential is put In its buffer at clock + delay. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em clock\-Delay} & the clock+delay of the neuron that had spiked (unsigned long) \\
+\hline
+{\em j} & J the amplitude of the futur spike (double) \\
+\hline
+\end{DoxyParams}
+\hypertarget{classNeurone_a8c06c1d2ba2e7516e15df22e0f68a7d6}{\index{Neurone@{Neurone}!set\-Current\-Ext@{set\-Current\-Ext}}
+\index{set\-Current\-Ext@{set\-Current\-Ext}!Neurone@{Neurone}}
+\subsubsection[{set\-Current\-Ext}]{\setlength{\rightskip}{0pt plus 5cm}void Neurone\-::set\-Current\-Ext (
+\begin{DoxyParamCaption}
+\item[{double}]{c}
+\end{DoxyParamCaption}
+)}}\label{classNeurone_a8c06c1d2ba2e7516e15df22e0f68a7d6}
+
+
+Set the external current. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em c} & new external current (double) \\
+\hline
+\end{DoxyParams}
+\hypertarget{classNeurone_a2bc48d7fed6bfb214748785981415f39}{\index{Neurone@{Neurone}!set\-Number\-Spikes@{set\-Number\-Spikes}}
+\index{set\-Number\-Spikes@{set\-Number\-Spikes}!Neurone@{Neurone}}
+\subsubsection[{set\-Number\-Spikes}]{\setlength{\rightskip}{0pt plus 5cm}void Neurone\-::set\-Number\-Spikes (
+\begin{DoxyParamCaption}
+\item[{int}]{n}
+\end{DoxyParamCaption}
+)}}\label{classNeurone_a2bc48d7fed6bfb214748785981415f39}
+
+
+Set the number of spikes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & number of spikes (int) \\
+\hline
+\end{DoxyParams}
+\hypertarget{classNeurone_af3913a8bc53e5fbd5b8f29633a123b6b}{\index{Neurone@{Neurone}!set\-Potential@{set\-Potential}}
+\index{set\-Potential@{set\-Potential}!Neurone@{Neurone}}
+\subsubsection[{set\-Potential}]{\setlength{\rightskip}{0pt plus 5cm}void Neurone\-::set\-Potential (
+\begin{DoxyParamCaption}
+\item[{long double}]{p}
+\end{DoxyParamCaption}
+)}}\label{classNeurone_af3913a8bc53e5fbd5b8f29633a123b6b}
+
+
+Set the membrane potential. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & new membrane potential (double) \\
+\hline
+\end{DoxyParams}
+\hypertarget{classNeurone_a46e5533a614e37f945595847dedc6b55}{\index{Neurone@{Neurone}!update@{update}}
+\index{update@{update}!Neurone@{Neurone}}
+\subsubsection[{update}]{\setlength{\rightskip}{0pt plus 5cm}bool Neurone\-::update (
+\begin{DoxyParamCaption}
+\item[{unsigned long}]{time}
+\end{DoxyParamCaption}
+)}}\label{classNeurone_a46e5533a614e37f945595847dedc6b55}
+
+
+Update the membrane Potential. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em time} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+booleen true if spike occured 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{neurone_8hpp}{neurone.\-hpp}\item 
+neurone.\-cpp\end{DoxyCompactItemize}

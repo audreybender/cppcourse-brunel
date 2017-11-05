@@ -1,0 +1,6 @@
+/home/localguest/Documents/Neurone/build/gtest/googlemock/gtest/CMakeFiles/gtest.dir
+/home/localguest/Documents/Neurone/build/CMakeFiles/Neurone.dir
+/home/localguest/Documents/Neurone/build/gtest/googlemock/CMakeFiles/gmock.dir
+/home/localguest/Documents/Neurone/build/gtest/googlemock/gtest/CMakeFiles/gtest_main.dir
+/home/localguest/Documents/Neurone/build/gtest/googlemock/CMakeFiles/gmock_main.dir
+/home/localguest/Documents/Neurone/build/CMakeFiles/testNeurone.dir

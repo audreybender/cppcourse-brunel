@@ -1,0 +1,1 @@
+/usr/bin/c++   -O3 -W -Wall -pedantic -std=c++11   CMakeFiles/testNeurone.dir/neurone.cpp.o CMakeFiles/testNeurone.dir/Network.cpp.o CMakeFiles/testNeurone.dir/testNeurone.cpp.o  -o testNeurone -rdynamic gtest/googlemock/gtest/libgtest.a gtest/googlemock/gtest/libgtest_main.a gtest/googlemock/gtest/libgtest.a -pthread 
