@@ -142,14 +142,8 @@ void Network::display() {
 			//Writing time ( in steps ) of spikes of each neurons
 		    fichier <<'\t' << timeSpikes[i]*h << '\t' << i << '\n';
 		   
-		    if ( i== 461 ){
-				cerr << " Number : " << numberSpikes[i] << endl;
-				cerr << " TimeSpikes : " << timeSpikes[i]*h << endl;
-				
-			}
 		  }
 		}
-		cerr << potentials[461] << endl;
 	  }
 	  fichier.close();
 	}
