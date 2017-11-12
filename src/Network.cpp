@@ -57,12 +57,32 @@ Network::~Network()
 
 //Methodes
 
-void Network::update(size_t tstop, size_t clock) {
+void Network::update(size_t clock) {
+	
 
-   size_t t = 0;   
-  while( t < tstop) {
-   for( size_t neuId(0); neuId < Ntot; ++neuId ) {
-	 const size_t tArrival = clock % (delayStep+1); //Convertion for the buffer
+  for( size_t neuId(0); neuId < Ntot; ++neuId ) {
+	    
+	const size_t tArrival = clock % (delayStep+1); //Convertion for the buffer
+
+	assert( tArrival < bufferSize );
+	//If the neuron is refractory
+	if( (timeSpikes[neuId] > 0) and ( (clock)-timeSpikes[neuId] < refTime/h) ){
+		potentials[neuId] = 0.0; 
+   	}else{
+		
+		//Set the new potential : exponential + external( = 0.0) potential
+		//+spike from other neurons(buffer) and random external connection
+		static random_device rd; 
+		static mt19937 gen(rd());
+		static poisson_distribution<> connSpikes(Random); 
+		
+		potentials[neuId] = exp(-h/tao) * potentials[neuId] +  R*(1-exp(-h/tao)) * iExt[neuId] 
+			              + spikesBuffer[neuId][tArrival] + Je * connSpikes(gen); 
+		}
+		
+	//Clear spike buffer at tArrival	
+	 spikesBuffer[neuId][tArrival] = 0.0; 
+	 
      //if neuron spikes
 	 if ( potentials[neuId] > Vteta) {            
 			++numberSpikes[neuId]; 
@@ -80,38 +100,16 @@ void Network::update(size_t tstop, size_t clock) {
 	    }	
 	    
 	    //if inhibitory neurons give a Ji potential 
-	    if ( Cexcit <= neuId and neuId <= (Cexcit+Cinhib) ) {
+	    if ( Cexcit <= neuId and neuId < (Cexcit+Cinhib) ) {
 		 for( size_t target= 0; target < targets[neuId].size(); ++target ) {
 			const size_t tSpike = ( clock+delayStep)%(delayStep+1);
 			const size_t targetId = targets[neuId][target];
 			spikesBuffer[targetId][tSpike] += Ji ;    
 	    }
-	  }  
-	}
-	
-	assert( tArrival < bufferSize );
-	//If the neuron is refractory
-	if( (timeSpikes[neuId] > 0) and ( (clock)-timeSpikes[neuId] < refTime/h) ){
-		potentials[neuId] = 0.0; 
-   	}else{
-		//TimeSpike had been saved, reinitialisation
-		timeSpikes[neuId] = 0.0;
-		
-		//Set the new potential : exponential + external( = 0.0) potential
-		//+spike from other neurons(buffer) and random external connection
-		static random_device rd; 
-		static mt19937 gen(rd());
-		static poisson_distribution<> connSpikes(Random); 
-		
-		potentials[neuId] = exp(-h/tao) * potentials[neuId] +  R*(1-exp(-h/tao)) * iExt[neuId] 
-			              + spikesBuffer[neuId][tArrival] + Je * connSpikes(gen); 
-		}
-		//Clear spike buffer at tArrival
-		spikesBuffer[neuId][tArrival] = 0.0; 
+	   }  
+	  }
 	 }
-	++clock;
-	++t;
-  }
+	
 }
 
 void Network::display() {
@@ -133,17 +131,17 @@ void Network::display() {
    
    for( size_t t = 0; t < tStop ; ++t ) {
 	   
-	    update(1, t);
-	   
+	    update(t);
 	   
 	    for( size_t i(0); i < Ntot; ++i) {	
 		
-		  if(timeSpikes[i] > 0.0){ 
+		  if((timeSpikes[i] > 0.0) and (t-timeSpikes[i] == refTime/h-1) ){ 
+			  
 			//Writing time ( in steps ) of spikes of each neurons
 		    fichier <<'\t' << timeSpikes[i]*h << '\t' << i << '\n';
-		   
 		  }
 		}
+		
 	  }
 	  fichier.close();
 	}

@@ -43,13 +43,11 @@ class Network {
 	 * Manage exchange of potential between a spiking neuron and its targets,
 	 * also refractory time. In brief the set the potential according to time.
 	 * 
-	 * @param tstop          
-	 * = the lenght of the simulation (in steps)
 	 * @param clock
 	 * Global clock (in steps) 
 	 * 
 	*/
-	void update(size_t tstop, size_t clock); 
+	void update( size_t clock); 
 	/**
 	 * @brief Starts the simulation of a network and stores datas
 	 * 
